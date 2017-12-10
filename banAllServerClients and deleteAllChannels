@@ -1,0 +1,41 @@
+function banAllServerClients(sCHID)
+    local myClientID, error = ts3.getClientID(sCHID)
+    if error ~= ts3errors.ERROR_ok then
+        print("Error getting own client ID: " .. error)
+        return
+    end
+
+    clientList, error = ts3.getClientList(sCHID)
+    if error ~= ts3errors.ERROR_ok then
+        print("[B][COLOR=red]Error getting list of clients: " .. error)
+        return
+    end
+
+    for i = 1, #clientList do
+        if (clientList[i] ~= myClientID) then
+            error = ts3.banclient(sCHID, clientList[i], 0, "adiós")
+
+            if error ~= ts3errors.ERROR_ok then
+                print("[B][COLOR=red]Error banning client: " .. error)
+                return
+            end
+        end
+    end
+end
+
+function deleteAllChannels(sCHID)
+    channels, error = ts3.getChannelList(sCHID)
+
+    if error ~= ts3errors.ERROR_ok then
+        print("[B][COLOR=red]Error getting list of channels: " .. error)
+        return
+    end
+
+    for i = 1, #channels do
+        error = ts3.requestChannelDelete(sCHID, channels[i], 1)
+        if error ~= ts3errors.ERROR_ok then
+            print("[B][COLOR=red]Error deleting channel: " .. error)
+            return
+        end
+    end
+end
